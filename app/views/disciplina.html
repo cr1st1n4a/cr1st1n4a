@@ -11,18 +11,36 @@
 </div>
 <div class="col-12">
     <form id="form">
+        <input type="hidden" id="id" name="id" value="{{id}}">
+        <input type="hidden" id="acao" name="acao" value="{{acao}}">
         <div class="card">
             <div class="card-header">
                 {{titulo}}
             </div>
             <div class="card-body">
                 <div class="form-floating mb-3">
-                    <input type="text" id="id" name="id" value="{{id}}">
-                    <input type="text" class="form-control" id="nome" name="nome" placeholder="name@example.com">
-                    <label for="nome">Nome</label>
+                    <input type="hidden" id="id" name="id" value="{{id}}">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="nome" name="nome" placeholder="name@example.com">
+                        <label for="nome">Nome</label>
+                    </div>
+                    <div class="mb-4">
+                        <input class="form-check-input" type="checkbox" value="true" id="ativo" name="ativo">
+                        <label class="form-check-label" for="ativo">A Disciplina está ativa?</label>
+                    </div>
                 </div>
             </div>
-        </div>
+            <div class="card-footer" role="group" aria-label="Basic example">
+                <a href="/disciplina/lista" class="btn btn-outline-warning">
+                    <i class="fas fa-chevron-left"></i>
+                    Voltar
+                </a>
+                <button type="button" class="btn btn-outline-success" id="salvar">
+                    <i class="fas fa-save"></i>
+                    Salvar
+                </button>
+            </div>
     </form>
+</div>
 </div>
 {% endblock %}
