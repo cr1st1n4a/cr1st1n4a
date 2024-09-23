@@ -33,4 +33,3 @@ async function Delete(id) {
         console.error('Restrição ao deletar:', error);
     }
 }
-

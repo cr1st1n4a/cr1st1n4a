@@ -7,7 +7,7 @@ class ControllerLogin extends Base
     public function login($request, $response)
     {
         $TempleteData = [
-            'titulo' => 'Altenticação'
+            'titulo' => 'Cadastrar usuário'
         ];
         return $this->getTwig()
             ->render($response, $this->setView('login'), $TempleteData)

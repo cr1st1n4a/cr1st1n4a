@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
@@ -10,37 +10,119 @@
     <link href="https://cdn.datatables.net/buttons/3.1.2/css/buttons.bootstrap5.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/colreorder/2.0.4/css/colReorder.bootstrap5.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/responsive/3.0.3/css/responsive.bootstrap5.min.css" rel="stylesheet">
-    <title>Document</title>
+    <title>Login</title>
 </head>
 
 <body>
-    <div class="col-12">
-        <form id="form">
-            <div class="card">
-                <div class="card-header">
-                    Altenticação
+    <div class="container mt-5">
+        <div class="col-md-6 mx-auto">
+            <form id="form">
+                <div class="card shadow">
+                    <div class="card-header text-center">
+                        <h4>Autenticação</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="username" name="username"
+                                placeholder="Digite seu username" required>
+                            <label for="username">Digite seu username</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" id="insiraSenha" name="senha"
+                                placeholder="Digite sua senha" required>
+                            <label for="senhaEntrar">Digite sua senha</label>
+                        </div>
+                    </div>
+                    <div class="card-footer text-center">
+                        <p>
+                            <small>Não tem uma conta?<a href="#" class="text-primary" data-bs-toggle="modal"
+                                    data-bs-target="#cadastroModal">
+                                    Cadastrar usuário
+                                </a></small>
+                            <br>
+                            <small></small><a href="#" class="text-primary" data-bs-toggle="modal"
+                                data-bs-target="#mudancaSenhaModal">
+                                Mudar Senha
+                            </a></small>
+                        </p>
+                        <button type="button" class="btn btn-success" id="fazerlogin">
+                            Login
+                        </button>
+                    </div>
                 </div>
-                <div class="card-body">
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de Cadastro -->
+    <form for="formCadastro">
+        <div class="modal fade" id="cadastroModal" tabindex="-1" aria-labelledby="cadastroModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="cadastroModalLabel">Cadastrar Usuário</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="nome" placeholder="Digite seu nome" required>
+                            <label for="nome">Nome</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="email" placeholder="Digite seu e-mail"
+                                required>
+                            <label for="email">E-mail</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="login" placeholder="Digite seu login"
+                                required>
+                            <label for="novoLogin">Digite seu login</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" id="senha" placeholder="Digite sua senha"
+                                required>
+                            <label for="novaSenha">Digite sua senha</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                        <button type="button" class="btn btn-primary" id="salvar">Cadastrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- Modal de Mudança de Senha -->
+    <div class="modal fade" id="mudancaSenhaModal" tabindex="-1" aria-labelledby="mudancaSenhaModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="mudancaSenhaModalLabel">Mudar Senha</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="login" name="login" placeholder="Digite seu login">
-                        <label for="login">Digite seu login</label>
+                        <input type="password" class="form-control" id="senhaAtual" placeholder="Digite sua senha atual"
+                            required>
+                        <label for="senhaAtual">Senha Atual</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="password" class="form-control" id="senha" name="senha"
-                            placeholder="Digite sua senha">
-                        <label for="senha">Digite sua senha</label>
+                        <input type="password" class="form-control" id="novaSenhaMudanca"
+                            placeholder="Digite sua nova senha" required>
+                        <label for="novaSenhaMudanca">Nova Senha</label>
                     </div>
                 </div>
-                <div class="card-footer" role="group" aria-label="Basic example">
-                    <a href="" class="btn btn-outline-success">
-                        <i class="fas fa-chevron-left"></i>
-                        Login
-                    </a>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary">Mudar Senha</button>
                 </div>
-        </form>
+            </div>
+        </div>
     </div>
-    </div>
-    <script src="/js/all.min.js"></script>
+
+    <script src="/html/js/all.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/js/bootstrap.min.js"></script>
     <script src="js/disciplina.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
@@ -57,6 +139,8 @@
     <script src="https://cdn.datatables.net/colreorder/2.0.4/js/dataTables.colReorder.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/3.0.3/js/dataTables.responsive.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/3.0.3/js/responsive.bootstrap5.js"></script>
+    <script src="/html/js/usuario.js"></script>
+
 </body>
 
 </html>
