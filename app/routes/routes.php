@@ -1,15 +1,15 @@
 <?php
 
-use app\controllers\ControllerLogin;
-use app\controllers\ControllerUsuario;
 use app\controllers\ControllerCliente;
 use app\controllers\ControllerDisciplina;
 use app\controllers\ControllerHome;
+use app\controllers\ControllerLogin;
+use app\controllers\ControllerUsuario;
+use app\Middleware\Middleware;
 use Slim\Routing\RouteCollectorProxy;
 
-$app->get('/', ControllerHome::class . ':home');
-
-$app->get('/login', ControllerLogin::class . ':login');
+$app->get('/', ControllerHome::class . ':home')->add(Middleware::route());
+$app->get('/login', ControllerLogin::class . ':login')->add(Middleware::route());
 
 $app->group('/cliente', function (RouteCollectorProxy $group) {
     $group->get('/cadastro', ControllerCliente::class . ':cadastro');

@@ -1,24 +1,51 @@
-const salvar = document.getElementById('salvar');
-async function Insert() {
-    const form = document.getElementById('formCadastro');
-    formData = new FormData(form);
-    const opt = {
-        method: 'POST',
-        body: formData
-    };
-    const response = await fetch('/usuario/insert', opt);
-    if (!response.ok) {
-        console.error('Erro na requisição:', response.statusText);
-        return;
+   // Função para verificar as senhas no modal de recuperação de senha
+   document.getElementById('confirmResetPassword').onclick = function() {
+    const novaSenha = document.getElementById('novaSenha').value;
+    const confirmeSenha = document.getElementById('confirmeSenha').value;
+    const errorMessage = document.getElementById('error-message');
+
+    if (novaSenha !== confirmeSenha) {
+        errorMessage.style.display = 'block';
+    } else {
+        errorMessage.style.display = 'none';
+        // Aqui você pode adicionar lógica para processar a nova senha
+        alert('Senha alterada com sucesso!');
+        
     }
-    const json = await response.json();
-    if (json.status != true) {
-        alert('Verique os dados digitados e tente novamente!');
-        return;
+};
+
+document.getElementById('salvar').onclick = function() {
+    const nome = document.getElementById('nome').value;
+    const login = document.getElementById('login').value;
+    const email = document.getElementById('email').value;
+    const senha = document.getElementById('senha').value;
+    
+    fetch('usuario.php', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: new URLSearchParams({
+        nome: nome,
+        login: login,
+        email: email,
+        senha: senha
+    })
+})
+.then(response => response.json())
+.then(data => {
+    if (data.status === 'success') {
+        alert('Cadastro realizado com sucesso!');
+        // Fechar o modal após o cadastro
+        $('#cadastroModal').modal('hide');
+    } else {
+        alert('Erro: ' + data.message);
     }
-    alert('Disciplina cadastrada com sucesso!');
-    return;
-}
-salvar.addEventListener('click', async () => {
-    await Insert();
-});
+})
+.catch(error => console.error('Erro:', error));
+};
+    // Obter valores dos campos do formulário principal
+    const nomePrincipal = document.getElementById('nome').value;
+    const loginPrincipal = document.getElementById('login').value;
+    const senhaPrincipal = document.getElementById('senha').value;
+    const emailPrincipal = document.getElementById('email').value;

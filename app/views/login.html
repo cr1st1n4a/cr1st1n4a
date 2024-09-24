@@ -55,7 +55,7 @@
     </div>
 
     <!-- Modal de Cadastro -->
-    <form for="formCadastro">
+    <form id="formCadastro">
         <div class="modal fade" id="cadastroModal" tabindex="-1" aria-labelledby="cadastroModalLabel"
             aria-hidden="true">
             <div class="modal-dialog">
@@ -82,7 +82,7 @@
                         <div class="form-floating mb-3">
                             <input type="password" class="form-control" id="senha" placeholder="Digite sua senha"
                                 required>
-                            <label for="novaSenha">Digite sua senha</label>
+                            <label for="senha">Digite sua senha</label>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -109,22 +109,26 @@
                         <label for="senhaAtual">Senha Atual</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="password" class="form-control" id="novaSenhaMudanca"
+                        <input type="password" class="form-control" id="novaSenha"
                             placeholder="Digite sua nova senha" required>
-                        <label for="novaSenhaMudanca">Nova Senha</label>
+                        <label for="novaSenha">Nova Senha</label>
                     </div>
+                    <div class="form-group">
+                        <label for="confirmeSenha">Confirme sua nova senha</label>
+                        <input type="password" class="form-control" id="confirmeSenha" required>
+                    </div>
+                    <div id="error-message" class="text-danger" style="display: none;">As senhas não coincidem.</div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                    <button type="button" class="btn btn-primary">Mudar Senha</button>
+                    <button type="button" class="btn btn-primary" id="confirmResetPassword">Mudar Senha</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="/html/js/all.min.js"></script>
+    <script src="/js/all.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/js/bootstrap.min.js"></script>
-    <script src="js/disciplina.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
@@ -139,7 +143,7 @@
     <script src="https://cdn.datatables.net/colreorder/2.0.4/js/dataTables.colReorder.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/3.0.3/js/dataTables.responsive.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/3.0.3/js/responsive.bootstrap5.js"></script>
-    <script src="/html/js/usuario.js"></script>
+    <script src="/js/usuario.js"></script>
 
 </body>
 
