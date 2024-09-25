@@ -13,7 +13,6 @@
         
     }
 };
-
 document.getElementById('salvar').onclick = function() {
     const nome = document.getElementById('nome').value;
     const login = document.getElementById('login').value;
