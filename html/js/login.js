@@ -1,104 +1,92 @@
-function showAlert(message, type) {
-    const alertContainer = document.querySelector('.alert-container');
-    const alert = document.createElement('div');
-    alert.className = `alert alert-${type}`;
-    alert.role = 'alert';
-    alert.textContent = message;
-    alertContainer.appendChild(alert);
-    setTimeout(() => {
-        alert.remove();
-    }, 1000);
-}
+document.addEventListener("DOMContentLoaded", function() {
+    // Login
+    document.getElementById('fazerlogin').addEventListener('click', function(event) {
+        event.preventDefault(); // Evita o comportamento padrão do botão
+        const form = document.getElementById('formLogin');
+        const formData = new FormData(form);
 
-document.getElementById('salvarSenha').onclick = function () {
-    const novaSenha = document.getElementById('novaSenha').value;
-    const confirmaSenha = document.getElementById('confirmaSenha').value;
-
-    if (novaSenha === confirmaSenha && novaSenha !== "") {
-        $('#successAlert').removeClass('d-none');
-        setTimeout(() => {
-            $('#successAlert').addClass('d-none');
-            $('#esqueceuSenhaModal').modal('hide'); // Fecha o modal após o alerta
-        }, 1000);
-    } else {
-        $('#warningAlert').removeClass('d-none');
-    }
-};
-
-// Mantém o modal aberto se as senhas não coincidirem
-$('#esqueceuSenhaModal').on('hide.bs.modal', function (e) {
-    const warningVisible = !$('#warningAlert').hasClass('d-none');
-    if (warningVisible) {
-        e.preventDefault(); // Cancela o fechamento do modal
-    }
-});
-
-document.getElementById('confirmarCadastro').onclick = function () {
-    const nome = document.getElementById('nome').value;
-    const login = document.getElementById('login').value;
-    const email = document.getElementById('email').value;
-    const senha = document.getElementById('senha').value;
-
-    // Prossegue com o cadastro
-    fetch('usuario.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({
-            nome: nome,
-            login: login,
-            email: email,
-            senha: senha
+        fetch('/authenticate', { // Rota correta do login
+            method: 'POST',
+            body: formData
         })
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                showAlert('Cadastro realizado com sucesso!', 'success');
-                $('#cadastroModal').modal('hide'); // Fecha o modal
-            } else {
-                showAlert('Erro: ' + data.message, 'warning');
+        .then(response => {
+            if (!response.ok) {
+                return response.text().then(text => { throw new Error(text); });
             }
+            return response.text();
+        })
+        .then(data => {
+            console.log(data);
+            // Redirecione ou mostre uma mensagem de sucesso
+            window.location.href = '/home'; // Redirecione para uma página de sucesso
         })
         .catch(error => {
-            showAlert('Erro: ' + error.message, 'danger');
+            console.error('Erro:', error);
+            alert(error.message); // Mostre o erro ao usuário
         });
-};
+    });
 
-document.getElementById('loginForm').onsubmit = function (event) {
-    event.preventDefault(); // Impede o envio padrão do formulário
+    // Cadastro
+    document.getElementById('salvarCadastro').addEventListener('click', function(event) {
+        event.preventDefault(); // Evita o comportamento padrão do botão
+        const form = document.getElementById('formCadastro');
+        const formData = new FormData(form);
 
-    const login = document.getElementById('login').value;
-    const senha = document.getElementById('senha').value;
-
-    // Envia uma requisição ao servidor para verificar as credenciais
-    fetch('login.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({
-            login: login,
-            senha: senha
+        fetch('/login/register', {
+            method: 'POST',
+            body: formData
         })
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                // Armazena a autenticação
-                localStorage.setItem('authenticated', 'true');
-                // Redireciona para uma página de sucesso
-                window.location.href = '/home';
-            } else {
-                showAlert('Login ou senha inválidos.', 'danger');
+        .then(response => {
+            if (!response.ok) {
+                return response.text().then(text => { throw new Error(text); });
             }
+            return response.text();
+        })
+        .then(data => {
+            console.log(data);
+            $('#cadastroModal').modal('hide'); // Fecha o modal de cadastro
+            alert('Usuário cadastrado com sucesso!'); // Mensagem de sucesso
         })
         .catch(error => {
-            showAlert('Erro: ' + error.message, 'danger');
+            console.error('Erro:', error);
+            alert(error.message); // Mostre o erro ao usuário
         });
-};
+    });
 
-salvar.addEventListener('click', async () => {
-    await Insert();
+    // Mudar Senha
+    document.getElementById('confirmResetPassword').addEventListener('click', function(event) {
+        event.preventDefault(); // Evita o comportamento padrão do botão
+        const senhaAtual = document.getElementById('senhaAtual').value;
+        const novaSenha = document.getElementById('novaSenha').value;
+        const confirmeSenha = document.getElementById('confirmeSenha').value;
+
+        if (novaSenha !== confirmeSenha) {
+            document.getElementById('error-message').style.display = 'block'; // Exibe mensagem de erro
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('senhaAtual', senhaAtual);
+        formData.append('novaSenha', novaSenha);
+
+        fetch('/login/change-password', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.text().then(text => { throw new Error(text); });
+            }
+            return response.text();
+        })
+        .then(data => {
+            console.log(data);
+            $('#mudancaSenhaModal').modal('hide'); // Fecha o modal de mudança de senha
+            alert('Senha alterada com sucesso!'); // Mensagem de sucesso
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            alert(error.message); // Mostre o erro ao usuário
+        });
+    });
 });

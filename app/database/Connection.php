@@ -41,3 +41,9 @@ class Connection
         }
     }
 }
+try {
+    $db = Connection::open();
+    echo "Conexão bem-sucedida!";
+} catch (\Exception $e) {
+    echo "Erro: " . $e->getMessage();
+}

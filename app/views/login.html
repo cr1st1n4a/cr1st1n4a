@@ -1,53 +1,36 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/all.min.css">
-    <link href="https://cdn.datatables.net/2.1.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
-    <link href="https://cdn.datatables.net/buttons/3.1.2/css/buttons.bootstrap5.min.css" rel="stylesheet">
-    <link href="https://cdn.datatables.net/colreorder/2.0.4/css/colReorder.bootstrap5.min.css" rel="stylesheet">
-    <link href="https://cdn.datatables.net/responsive/3.0.3/css/responsive.bootstrap5.min.css" rel="stylesheet">
     <title>Login</title>
 </head>
-
 <body>
     <div class="container mt-5">
         <div class="col-md-6 mx-auto">
-            <form id="form">
+            <form id="formLogin">
                 <div class="card shadow">
                     <div class="card-header text-center">
                         <h4>Autenticação</h4>
                     </div>
                     <div class="card-body">
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="username" name="username"
-                                placeholder="Digite seu username" required>
+                            <input type="text" class="form-control" id="username" name="username" placeholder="Digite seu username" required>
                             <label for="username">Digite seu username</label>
                         </div>
                         <div class="form-floating mb-3">
-                            <input type="password" class="form-control" id="password" name="senha"
-                                placeholder="Digite sua senha" required>
+                            <input type="password" class="form-control" id="password" name="senha" placeholder="Digite sua senha" required>
                             <label for="password">Digite sua senha</label>
                         </div>
                     </div>
                     <div class="card-footer text-center">
                         <p>
-                            <small>Não tem uma conta?<a href="#" class="text-primary" data-bs-toggle="modal"
-                                    data-bs-target="#cadastroModal">
-                                    Cadastrar usuário
-                                </a></small>
+                            <small>Não tem uma conta? <a href="#" class="text-primary" data-bs-toggle="modal" data-bs-target="#cadastroModal">Cadastrar usuário</a></small>
                             <br>
-                            <small></small><a href="#" class="text-primary" data-bs-toggle="modal"
-                                data-bs-target="#mudancaSenhaModal">
-                                Mudar Senha
-                            </a></small>
+                            <small><a href="#" class="text-primary" data-bs-toggle="modal" data-bs-target="#mudancaSenhaModal">Mudar Senha</a></small>
                         </p>
-                        <button type="button" class="btn btn-success" id="fazerlogin">
-                            Login
-                        </button>
+                        <button type="button" class="btn btn-success" id="fazerlogin">Login</button>
                     </div>
                 </div>
             </form>
@@ -56,8 +39,7 @@
 
     <!-- Modal de Cadastro -->
     <form id="formCadastro">
-        <div class="modal fade" id="cadastroModal" tabindex="-1" aria-labelledby="cadastroModalLabel"
-            aria-hidden="true">
+        <div class="modal fade" id="cadastroModal" tabindex="-1" aria-labelledby="cadastroModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -70,32 +52,29 @@
                             <label for="nome">Nome</label>
                         </div>
                         <div class="form-floating mb-3">
-                            <input type="email" class="form-control" id="email" placeholder="Digite seu e-mail"
-                                required>
+                            <input type="email" class="form-control" id="email" placeholder="Digite seu e-mail" required>
                             <label for="email">E-mail</label>
                         </div>
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="login" placeholder="Digite seu login"
-                                required>
+                            <input type="text" class="form-control" id="login" placeholder="Digite seu login" required>
                             <label for="novoLogin">Digite seu login</label>
                         </div>
                         <div class="form-floating mb-3">
-                            <input type="password" class="form-control" id="senha" placeholder="Digite sua senha"
-                                required>
+                            <input type="password" class="form-control" id="senha" placeholder="Digite sua senha" required>
                             <label for="senha">Digite sua senha</label>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                        <button type="button" class="btn btn-primary" id="salvar">Cadastrar</button>
+                        <button type="button" class="btn btn-primary" id="salvarCadastro">Cadastrar</button>
                     </div>
                 </div>
             </div>
         </div>
     </form>
+
     <!-- Modal de Mudança de Senha -->
-    <div class="modal fade" id="mudancaSenhaModal" tabindex="-1" aria-labelledby="mudancaSenhaModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="mudancaSenhaModal" tabindex="-1" aria-labelledby="mudancaSenhaModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -104,13 +83,11 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-floating mb-3">
-                        <input type="password" class="form-control" id="senhaAtual" placeholder="Digite sua senha atual"
-                            required>
+                        <input type="password" class="form-control" id="senhaAtual" placeholder="Digite sua senha atual" required>
                         <label for="senhaAtual">Senha Atual</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="password" class="form-control" id="novaSenha"
-                            placeholder="Digite sua nova senha" required>
+                        <input type="password" class="form-control" id="novaSenha" placeholder="Digite sua nova senha" required>
                         <label for="novaSenha">Nova Senha</label>
                     </div>
                     <div class="form-group">
@@ -127,24 +104,8 @@
         </div>
     </div>
 
-    <script src="/js/all.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/js/bootstrap.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/2.1.6/js/dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/2.1.6/js/dataTables.bootstrap5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/3.1.2/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.bootstrap5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.colVis.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.print.min.js"></script>
-    <script src="https://cdn.datatables.net/colreorder/2.0.4/js/dataTables.colReorder.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/3.0.3/js/dataTables.responsive.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/3.0.3/js/responsive.bootstrap5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/js/bootstrap.min.js"></script>
     <script src="/js/login.js"></script>
-    
 </body>
-
 </html>
