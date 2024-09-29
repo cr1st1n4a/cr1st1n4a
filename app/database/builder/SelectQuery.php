@@ -7,124 +7,135 @@ use app\database\Connection;
 class SelectQuery
 {
     private ?string $table = null;
-    private ?string $fields = null;
-    private string $order;
-    private string $group;
+    private ?string $fields = '*';
+    private ?string $order = null;
+    private ?string $group = null;
     private int $limit = 10;
     private int $offset = 0;
     private array $where = [];
     private array $join = [];
     private array $binds = [];
-    private string $limits;
+    private string $limits = '';
+
     public static function execSQL(string $sql, $fetchAll = true)
     {
-        $self = new self;
         try {
             $connection = Connection::open();
             $query = $connection->query($sql);
             $resp = $query->execute();
-            if ($fetchAll) {
-                return $fetchAll ? $query->fetchAll() : $query->fetch();
-            } else {
-                return $resp;
-            }
+            return $fetchAll ? $query->fetchAll() : $query->fetch();
         } catch (\PDOException $e) {
             throw new \Exception("Restrição: {$e->getMessage()}");
         }
     }
+
     public static function select(string $fields = '*')
     {
         $self = new self;
         $self->fields = $fields;
         return $self;
     }
+
     public function from(string $table)
     {
-        $this->table = '';
         $this->table = $table;
         return $this;
     }
-    public function where(string $field, string $operator, string|int $value, ?string $logic = null)
+
+    public function where(string $field, string $operator, string|int $value)
     {
-        $placeHolder = '';
         $placeHolder = $field;
         if (str_contains($placeHolder, '.')) {
             $placeHolder = substr($field, strpos($field, '.') + 1);
         }
-        $this->where[] = "{$field} {$operator} :{$placeHolder} {$logic}";
+        $this->where[] = "{$field} {$operator} :{$placeHolder}";
         $this->binds[$placeHolder] = $value;
         return $this;
     }
-    public function order(string $field, string $value)
+
+    public function andWhere(string $field, string $operator, string|int $value)
     {
-        $this->order = " order by {$field} {$value}";
+        // Usar "AND" para concatenar a cláusula WHERE
+        $this->where[] = "AND {$field} {$operator} :{$field}";
+        $this->binds[$field] = $value;
         return $this;
     }
+
+    public function order(string $field, string $value)
+    {
+        $this->order = " ORDER BY {$field} {$value}";
+        return $this;
+    }
+
     public function createQuery()
     {
         if (!$this->fields) {
-            throw new \Exception("A query precisa chamar o metodo select");
+            throw new \Exception("A query precisa chamar o método select");
         }
         if (!$this->table) {
-            throw new \Exception("A query precisa chamar o metodo from");
+            throw new \Exception("A query precisa chamar o método from");
         }
-        $query = '';
-        $query = 'select ';
-        $query .= $this->fields . ' from ';
+        $query = 'SELECT ';
+        $query .= $this->fields . ' FROM ';
         $query .= $this->table;
-        $query .= (isset($this->join) and (count($this->join) > 0)) ? implode(' ', $this->join) : '';
-        $query .= (isset($this->where) and (count($this->where) > 0)) ? ' where ' . implode(' ', $this->where) : '';
+        $query .= !empty($this->join) ? implode(' ', $this->join) : '';
+        $query .= !empty($this->where) ? ' WHERE ' . ltrim(implode(' ', $this->where), 'AND ') : '';
         $query .= $this->group ?? '';
         $query .= $this->order ?? '';
-        $query .= $this->limits ?? '';
+        $query .= $this->limits;
         return $query;
     }
-    public function join(string $foreingTable, string $logic, string $type = 'inner')
+
+    public function join(string $foreingTable, string $logic, string $type = 'INNER')
     {
-        $this->join[] = " {$type} join {$foreingTable} on {$logic}";
+        $this->join[] = " {$type} JOIN {$foreingTable} ON {$logic}";
         return $this;
     }
+
     public function group(string $field)
     {
-        $this->group = " group by {$field}";
+        $this->group = " GROUP BY {$field}";
         return $this;
     }
-    public function limit(int $limit, int $offset)
+
+    public function limit(int $limit, int $offset = 0)
     {
         $this->limit = $limit;
         $this->offset = $offset;
-        $this->limits = " limit {$this->limit} offset {$this->offset}";
+        $this->limits = " LIMIT {$this->limit} OFFSET {$this->offset}";
         return $this;
     }
+
     public function between(string $field, string|int $value1, string|int $value2)
     {
         $placeHolder1 = $field . '_1';
         $placeHolder2 = $field . '_2';
-        $this->where[] = "{$field} between :{$placeHolder1} and :{$placeHolder2}";
+        $this->where[] = "{$field} BETWEEN :{$placeHolder1} AND :{$placeHolder2}";
         $this->binds[$placeHolder1] = $value1;
         $this->binds[$placeHolder2] = $value2;
         return $this;
     }
+
     public function fetch()
     {
-        $query = '';
         $query = $this->createQuery();
         try {
             $connection = Connection::open();
             $prepare = $connection->prepare($query);
-            $prepare->execute($this->binds ?? []);
+            $prepare->execute($this->binds);
             return $prepare->fetchObject();
         } catch (\PDOException $e) {
             throw new \Exception("Restrição: {$e->getMessage()}");
         }
     }
+
     public function fetchAll()
     {
         $query = $this->createQuery();
         try {
             $connection = Connection::open();
             $prepare = $connection->prepare($query);
-            $prepare->execute($this->binds ?? []);
+            $prepare->execute($this->binds);
             return $prepare->fetchAll();
         } catch (\PDOException $e) {
             throw new \Exception("Restrição: {$e->getMessage()}");

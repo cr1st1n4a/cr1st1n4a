@@ -4,101 +4,85 @@ namespace app\controllers;
 
 use app\database\builder\InsertQuery;
 use app\database\builder\SelectQuery;
-use app\database\Connection;
+use app\traits\Template;
 
 class ControllerLogin extends Base
 {
+    use Template;
+
     public function login($request, $response)
     {
-        return $this->renderLoginPage($response);
-    }
-
-    public function register($request, $response)
-    {
-        $form = $request->getParsedBody();
-        $login = filter_var($form['login'], FILTER_UNSAFE_RAW);
-        $senha = filter_var($form['senha'], FILTER_UNSAFE_RAW);
-        $email = filter_var($form['email'], FILTER_UNSAFE_RAW);
-
-        // Verificar se o login já existe
-        $selectQuery = SelectQuery::select('login')->from('usuario')->where('login', '=', $login);
-        $existingUser = $selectQuery->fetch();
-
-        if ($existingUser) {
-            return $response->withStatus(400)->write('Login já existe.');
-        }
-
-        $insertQuery = InsertQuery::table('usuario');
-        $hashedPassword = password_hash($senha, PASSWORD_DEFAULT);
-
-        if ($insertQuery->save(['login' => $login, 'senha' => $hashedPassword, 'email' => $email])) {
-            return $response->withHeader('Location', '/login')->withStatus(302);
-        }
-
-        return $response->withStatus(500)->write('Erro ao cadastrar usuário.');
-    }
-
-    public function changePassword($request, $response)
-    {
-        $form = $request->getParsedBody();
-        $senhaAtual = filter_var($form['senhaAtual'], FILTER_UNSAFE_RAW);
-        $novaSenha = filter_var($form['novaSenha'], FILTER_UNSAFE_RAW);
-        $confirmeSenha = filter_var($form['confirmeSenha'], FILTER_UNSAFE_RAW);
-
-        if ($novaSenha !== $confirmeSenha) {
-            return $response->withStatus(400)->write('As senhas não coincidem.');
-        }
-
-        session_start();
-        $login = $_SESSION['login'];
-
-        $selectQuery = SelectQuery::select('senha')->from('usuario')->where('login', '=', $login);
-        $user = $selectQuery->fetch();
-
-        if (!$user || !password_verify($senhaAtual, $user->senha)) {
-            return $response->withStatus(400)->write('Senha atual incorreta.');
-        }
-
-        $hashedPassword = password_hash($novaSenha, PASSWORD_DEFAULT);
-
-        $sql = "UPDATE usuario SET senha = :senha WHERE login = :login";
-        $connection = Connection::open();
-        $stmt = $connection->prepare($sql);
-        $stmt->bindParam(':senha', $hashedPassword);
-        $stmt->bindParam(':login', $login);
-
-        if ($stmt->execute()) {
-            return $response->withHeader('Location', '/login')->withStatus(302);
-        }
-
-        return $response->withStatus(500)->write('Erro ao mudar a senha.');
+        return $this->getTwig()->render($response, 'login.html', []);
     }
 
     public function authenticate($request, $response)
     {
-        $form = $request->getParsedBody();
-        $login = filter_var($form['login'], FILTER_UNSAFE_RAW);
-        $senha = filter_var($form['senha'], FILTER_UNSAFE_RAW);
+        $params = $request->getParsedBody();
+        $login = $params['login'] ?? '';
+        $senha = $params['senha'] ?? '';
 
-        $selectQuery = SelectQuery::select('*')->from('usuario')->where('login', '=', $login);
-        $user = $selectQuery->fetch();
+        // Verifica se o login existe
+        $user = SelectQuery::select('*')
+            ->from('usuario')
+            ->where('login', '=', $login)
+            ->fetch();
 
-        if (!$user || !password_verify($senha, $user->senha)) {
-            return $response->withStatus(401)->write('Login ou senha incorretos.');
+        // Se o usuário existe, verifica a senha
+        if ($user && password_verify($senha, $user->senha)) { // Usando password_verify
+            $_SESSION['login'] = [
+                'logado' => true,
+                'user_id' => $user->id, // Certifique-se de que 'id' está correto
+            ];
+            return $response->withHeader('Location', HOME . '/')->withStatus(302);
         }
 
-        session_start();
-        $_SESSION['login'] = $user->login; // Armazena o login na sessão
-
-        return $response->withHeader('Location', '/dashboard')->withStatus(302);
+        $response->getBody()->write('Login ou senha inválidos.');
+        return $response->withStatus(401);
     }
 
-    private function renderLoginPage($response)
+    public function insert($request, $response)
     {
-        ob_start();
-        include __DIR__ . '/../views/login.html';
-        $html = ob_get_clean();
-        $response->getBody()->write($html);
-        return $response;
+        $params = json_decode($request->getBody(), true);
+
+        // Adiciona log para verificar os dados recebidos
+        error_log(print_r($params, true));
+
+        $nome = trim($params['nome'] ?? '');
+        $login = trim($params['login'] ?? '');
+        $email = trim($params['email'] ?? '');
+        $senha = trim($params['senha'] ?? '');
+
+        // Validação básica dos campos
+        if (empty($nome) || empty($login) || empty($email) || empty($senha)) {
+            $response->getBody()->write('Todos os campos são obrigatórios.');
+            return $response->withStatus(400);
+        }
+
+        // Verifica se o login já existe
+        $existingUser = SelectQuery::select('*')
+            ->from('usuario')
+            ->where('login', '=', $login)
+            ->fetch();
+
+        if ($existingUser) {
+            $response->getBody()->write('Login já existe.');
+            return $response->withStatus(400);
+        }
+
+        // Insere o novo usuário no banco de dados
+        try {
+            InsertQuery::table('usuario')->save([
+                'nome' => $nome,
+                'login' => $login,
+                'email' => $email,
+                'senha' => password_hash($senha, PASSWORD_DEFAULT), // Usando password_hash
+                'ativo' => true
+            ]);
+            $response->getBody()->write('Cadastro realizado com sucesso!');
+            return $response->withStatus(201);
+        } catch (\Exception $e) {
+            $response->getBody()->write('Erro ao cadastrar: ' . $e->getMessage());
+            return $response->withStatus(500);
+        }
     }
 }

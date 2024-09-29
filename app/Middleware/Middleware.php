@@ -1,45 +1,40 @@
 <?php
 
-namespace app\middleware;
+namespace app\Middleware;
 
 class Middleware
 {
     public static function route()
     {
-        $middleware = function ($request, $handler) {
-            #Executa o manipulador de requisição para obter a resposta
+        return function ($request, $handler) {
+            // Inicia a sessão se ainda não estiver iniciada
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
+
             $response = $handler->handle($request);
-            #CAPTURAMOS O METODOS DE REQUISIÇÃO.
             $method = $request->getMethod();
-            #CAPTURAMOS A PAGINA SOLICITADA PELO USUÁRIO
             $pagina = $request->getRequestTarget();
-            #CASO USUÁRIO NÃO ESTEJA LOGADO, DIRECIONAMOS PARA AUTENTICAÇÃO
-            if ($method == 'GET') {
-                if (
-                    (empty($_SESSION['usuario']) or
-                        !boolval($_SESSION['usuario']['logado'])) and
-                    ($pagina !== '/login')
-                ) {
-                    session_destroy();
-                    return $response
-                        ->withHeader('Location', HOME . '/login')
-                        ->withStatus(302);
-                    die();
-                }
-                if ($pagina == '/login') {
-                    #Caso o usuário esteja logado, redirecionamos para a página inicial
-                    if (
-                        isset($_SESSION['usuario']) and
-                        boolval($_SESSION['usuario']['logado'])
-                    ) {
-                        return $response->withHeader('Location', HOME)->withStatus(302);
-                        die();
+
+            // Verificação para redirecionar usuários não logados
+            if ($method === 'GET') {
+                // Se não estiver logado, redirecione para login
+                if (empty($_SESSION['login']) || !isset($_SESSION['login']['logado']) || !boolval($_SESSION['login']['logado'])) {
+                    // Evitar redirecionar para /login se já estiver nessa página
+                    if ($pagina !== '/login') {
+                        return $response
+                             ->withHeader('Location', HOME . '/login')
+                             ->withStatus(302);
                     }
                 }
+
+                // Redireciona usuários logados que tentam acessar a página de login
+                if ($pagina === '/login' && isset($_SESSION['login']) && boolval($_SESSION['login']['logado'])) {
+                    return $response->withHeader('Location', HOME . '/')->withStatus(302);
+                }
             }
+
             return $response;
-            die();
         };
-        return $middleware;
     }
 }
