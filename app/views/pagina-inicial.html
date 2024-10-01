@@ -1,12 +1,21 @@
 {% extends "main.html" %}
-{% block main %}
 
+{% block main %}
 <div class="col-12">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item active" aria-current="page">Início</li>
         </ol>
     </nav>
+    
+    <h1 class="text-center">Bem-vindo!</h1>
+    <p class="text-center">Aqui você encontrará as últimas atualizações e informações importantes.</p>
+    
+    <div class="text-center mt-4">
+        <form id="logout">
+            <button type="button" id="logoutButton" class="btn btn-danger">Desfazer Login</button>
+        </form>
+    </div>
 </div>
-
+<script src="/js/logout.js"></script>
 {% endblock %}

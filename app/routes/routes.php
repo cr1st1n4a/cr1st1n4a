@@ -4,15 +4,18 @@ use app\controllers\ControllerCliente;
 use app\controllers\ControllerDisciplina;
 use app\controllers\ControllerHome;
 use app\controllers\ControllerLogin;
+use app\controllers\ControllerLogout;
 use app\Middleware\Middleware;
 use Slim\Routing\RouteCollectorProxy;
 
 $app->get('/', ControllerHome::class . ':home')->add(Middleware::route());
 
+$app->post('/logout', ControllerLogout::class . ':logout');
 
 $app->get('/login', ControllerLogin::class . ':login')->add(Middleware::route());
 $app->post('/login/authenticate', ControllerLogin::class . ':authenticate');
 $app->post('/usuario/insert', ControllerLogin::class . ':insert');
+
 
 
 $app->group('/cliente', function (RouteCollectorProxy $group) {

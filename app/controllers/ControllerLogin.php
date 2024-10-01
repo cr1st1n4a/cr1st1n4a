@@ -39,7 +39,7 @@ class ControllerLogin extends Base
         $response->getBody()->write('Login ou senha inválidos.');
         return $response->withStatus(401);
     }
-
+    
     public function insert($request, $response)
     {
         $params = json_decode($request->getBody(), true);
