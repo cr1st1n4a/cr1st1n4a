@@ -5,8 +5,6 @@
 
 📚 Atualmente cursando Análise e Desenvolvimento de Sistemas pela Unopar.
 
-🚀 Apaixonada por tecnologia, estou sempre em busca de novos desafios e aprendizados.
-
 ## Conecte-se comigo
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/SEUUSERNAME/)
