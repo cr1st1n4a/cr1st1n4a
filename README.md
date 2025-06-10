@@ -1,13 +1,11 @@
 # cr1st1n4a
 👋 Olá, eu sou a Cristina!
 
-💻 Desenvolvedora Full-Stack em formação.
-
-🎓 Formada em Desenvolvimento Web pelo Senac, com foco em PHP.
+💻 Desenvolvedora java em formação.
 
 📚 Atualmente cursando Análise e Desenvolvimento de Sistemas pela Unopar.
 
-🚀 Apaixonada por tecnologia e desenvolvimento web, estou sempre em busca de novos desafios e aprendizados.
+🚀 Apaixonada por tecnologia, estou sempre em busca de novos desafios e aprendizados.
 
 ## Conecte-se comigo
 
